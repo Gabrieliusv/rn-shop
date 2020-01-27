@@ -39,7 +39,7 @@ const ProductItem = ({ image, title, price, onViewDetails, onAddToChart }) => {
               <Button
                 color={Colors.primary}
                 title='To Chart'
-                onPreess={onAddToChart}
+                onPress={onAddToChart}
               />
             </View>
           </View>

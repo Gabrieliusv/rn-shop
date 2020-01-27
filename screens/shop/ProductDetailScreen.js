@@ -10,8 +10,9 @@ import {
 
 import { connect } from "react-redux";
 import Colors from "../../constants/colors";
+import { addToCart } from "../../store/actions/cartActions";
 
-const ProductDetailScreen = ({ navigation, products }) => {
+const ProductDetailScreen = ({ navigation, products, addToCart }) => {
   const productId = navigation.getParam("productId");
   const product = products.find(prod => prod.id === productId);
 
@@ -22,7 +23,7 @@ const ProductDetailScreen = ({ navigation, products }) => {
         <Button
           color={Colors.primary}
           title='Add to chart'
-          onPress={() => {}}
+          onPress={() => addToCart(product)}
         />
       </View>
       <Text style={styles.price}>{product.price.toFixed(2)}</Text>
@@ -65,4 +66,4 @@ const mapStateToProps = state => ({
   products: state.products.availableProducts
 });
 
-export default connect(mapStateToProps)(ProductDetailScreen);
+export default connect(mapStateToProps, { addToCart })(ProductDetailScreen);

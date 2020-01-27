@@ -1,10 +1,13 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Platform } from "react-native";
 import { connect } from "react-redux";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import ProductItem from "../../components/shop/ProductItem";
+import { addToCart } from "../../store/actions/cartActions";
+import HeaderButton from "../../components/UI/HeaderButton";
 
-const ProductsOverviewScreen = ({ products, navigation }) => {
+const ProductsOverviewScreen = ({ products, navigation, addToCart }) => {
   return (
     <FlatList
       data={products}
@@ -19,19 +22,32 @@ const ProductsOverviewScreen = ({ products, navigation }) => {
               productTitle: itemData.item.title
             });
           }}
-          onAddToChart={() => {}}
+          onAddToChart={() => addToCart(itemData.item)}
         />
       )}
     />
   );
 };
 
-ProductsOverviewScreen.navigationOptions = {
-  headerTitle: "All Products"
+ProductsOverviewScreen.navigationOptions = navData => {
+  return {
+    headerTitle: "All Products",
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Cart'
+          iconName={Platform.os === "android" ? "md-cart" : "ios-cart"}
+          onPress={() => {
+            navData.navigation.navigate("Cart");
+          }}
+        />
+      </HeaderButtons>
+    )
+  };
 };
 
 const mapStateToProps = state => ({
   products: state.products.availableProducts
 });
 
-export default connect(mapStateToProps)(ProductsOverviewScreen);
+export default connect(mapStateToProps, { addToCart })(ProductsOverviewScreen);
