@@ -1,9 +1,12 @@
 import React from "react";
-import { View, Text, Flatlist, Button, StyleSheet } from "react-native";
+import { View, Text, FlatList, Button, StyleSheet } from "react-native";
 import { connect } from "react-redux";
-import Colors from "../../constants/colors";
 
-const CartScreen = ({ cart }) => {
+import Colors from "../../constants/colors";
+import CartItem from "../../components/shop/CartItem";
+import { removeFromCart } from "../../store/actions/cartActions";
+
+const CartScreen = ({ cart, removeFromCart }) => {
   const cartItems = [];
   for (const key in cart.items) {
     cartItems.push({
@@ -28,7 +31,18 @@ const CartScreen = ({ cart }) => {
           disabled={cartItems.length === 0}
         />
       </View>
-      <Text>CART ITEMS</Text>
+      <FlatList
+        data={cartItems}
+        keyExtractor={item => item.productId}
+        renderItem={itemData => (
+          <CartItem
+            quantity={itemData.item.quantity}
+            title={itemData.item.productTitle}
+            amount={itemData.item.sum}
+            onRemove={() => removeFromCart(itemData.item.productId)}
+          />
+        )}
+      />
     </View>
   );
 };
@@ -64,4 +78,4 @@ const mapStateToProps = state => ({
   cart: state.cart
 });
 
-export default connect(mapStateToProps)(CartScreen);
+export default connect(mapStateToProps, { removeFromCart })(CartScreen);
