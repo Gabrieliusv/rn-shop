@@ -22,7 +22,7 @@ const ProductDetailScreen = ({ navigation, products, addToCart }) => {
       <View style={styles.actions}>
         <Button
           color={Colors.primary}
-          title='Add to chart'
+          title='Add to cart'
           onPress={() => addToCart(product)}
         />
       </View>

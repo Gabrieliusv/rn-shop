@@ -3,9 +3,9 @@ import { FlatList, Platform } from "react-native";
 import { connect } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
+import HeaderButton from "../../components/UI/HeaderButton";
 import ProductItem from "../../components/shop/ProductItem";
 import { addToCart } from "../../store/actions/cartActions";
-import HeaderButton from "../../components/UI/HeaderButton";
 
 const ProductsOverviewScreen = ({ products, navigation, addToCart }) => {
   return (
@@ -22,7 +22,7 @@ const ProductsOverviewScreen = ({ products, navigation, addToCart }) => {
               productTitle: itemData.item.title
             });
           }}
-          onAddToChart={() => addToCart(itemData.item)}
+          onAddToCart={() => addToCart(itemData.item)}
         />
       )}
     />
@@ -32,11 +32,22 @@ const ProductsOverviewScreen = ({ products, navigation, addToCart }) => {
 ProductsOverviewScreen.navigationOptions = navData => {
   return {
     headerTitle: "All Products",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title='Cart'
-          iconName={Platform.os === "android" ? "md-cart" : "ios-cart"}
+          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
           onPress={() => {
             navData.navigation.navigate("Cart");
           }}

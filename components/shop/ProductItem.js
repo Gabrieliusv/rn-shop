@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Colors from "../../constants/colors";
 
-const ProductItem = ({ image, title, price, onViewDetails, onAddToChart }) => {
+const ProductItem = ({ image, title, price, onViewDetails, onAddToCart }) => {
   let TouchableCmp = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -38,8 +38,8 @@ const ProductItem = ({ image, title, price, onViewDetails, onAddToChart }) => {
               />
               <Button
                 color={Colors.primary}
-                title='To Chart'
-                onPress={onAddToChart}
+                title='To Cart'
+                onPress={onAddToCart}
               />
             </View>
           </View>

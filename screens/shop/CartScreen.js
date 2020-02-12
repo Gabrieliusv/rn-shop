@@ -5,8 +5,9 @@ import { connect } from "react-redux";
 import Colors from "../../constants/colors";
 import CartItem from "../../components/shop/CartItem";
 import { removeFromCart } from "../../store/actions/cartActions";
+import { addOrder } from "../../store/actions/orderActions";
 
-const CartScreen = ({ cart, removeFromCart }) => {
+const CartScreen = ({ cart, removeFromCart, addOrder }) => {
   const cartItems = [];
   for (const key in cart.items) {
     cartItems.push({
@@ -29,6 +30,7 @@ const CartScreen = ({ cart, removeFromCart }) => {
           color={Colors.primary}
           title='Order Now'
           disabled={cartItems.length === 0}
+          onPress={() => addOrder(cartItems, cart.totalAmount)}
         />
       </View>
       <FlatList
@@ -39,6 +41,7 @@ const CartScreen = ({ cart, removeFromCart }) => {
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.sum}
+            deletable
             onRemove={() => removeFromCart(itemData.item.productId)}
           />
         )}
@@ -74,8 +77,14 @@ const styles = StyleSheet.create({
   }
 });
 
+CartScreen.navigationOptions = {
+  headerTitle: "Your Cart"
+};
+
 const mapStateToProps = state => ({
   cart: state.cart
 });
 
-export default connect(mapStateToProps, { removeFromCart })(CartScreen);
+export default connect(mapStateToProps, { removeFromCart, addOrder })(
+  CartScreen
+);
