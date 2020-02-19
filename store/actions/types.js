@@ -1,3 +1,6 @@
 export const ADD_TO_CHART = "ADD_TO_CHART";
 export const REMOVE_FROM_CHART = "REMOVE_FROM_CHART";
 export const ADD_ORDER = "ADD_ORDER";
+export const DELETE_PRODUCT = "DELETE_PRODUCT";
+export const CREATE_PRODUCT = "CREATE_PRODUCT";
+export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
