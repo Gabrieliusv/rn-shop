@@ -122,6 +122,7 @@ const EditProductScreen = ({
             id='title'
             label='Title'
             errorText='Please enter a valid title!'
+            keyboardType='default'
             autoCapitalize='sentences'
             autoCorrect
             returnKeyType='next'
@@ -132,8 +133,9 @@ const EditProductScreen = ({
           />
           <Input
             id='imageUrl'
-            title='Image URL'
+            label='Image Url'
             errorText='Please enter a valid image url!'
+            keyboardType='default'
             returnKeyType='next'
             onInputChange={handleInputChange}
             initialValue={editedProduct ? editedProduct.imageUrl : ""}
@@ -156,6 +158,7 @@ const EditProductScreen = ({
             id='description'
             label='Description'
             errorText='Please enter a valid description!'
+            keyboardType='default'
             autoCapitalize='sentences'
             autoCorrect
             multiline
@@ -181,7 +184,7 @@ EditProductScreen.navigationOptions = navData => {
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
-          title='Add'
+          title='Save'
           iconName={
             Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
           }
@@ -195,10 +198,6 @@ EditProductScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   form: {
     margin: 20
-  },
-  label: {
-    fontFamily: "open-sans-bold",
-    marginVertical: 8
   }
 });
 

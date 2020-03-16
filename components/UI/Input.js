@@ -86,6 +86,10 @@ const styles = StyleSheet.create({
   formControl: {
     width: "100%"
   },
+  label: {
+    fontFamily: "open-sans-bold",
+    marginVertical: 8
+  },
   input: {
     paddingHorizontal: 2,
     paddingVertical: 5,

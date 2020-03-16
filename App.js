@@ -5,7 +5,6 @@ import { AppLoading } from "expo";
 import * as Font from "expo-font";
 
 import ShopNavigator from "./navigation/ShopNavigator";
-import { startAsync } from "expo/build/AR";
 
 const fetchFonts = () => {
   return Font.loadAsync({
