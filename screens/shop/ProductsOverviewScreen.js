@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Text
 } from "react-native";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -17,33 +17,39 @@ import { addToCart } from "../../store/actions/cartActions";
 import Colors from "../../constants/colors";
 import { fetchProducts } from "../../store/actions/productsActions";
 
-const ProductsOverviewScreen = ({ products, navigation, addToCart }) => {
+const ProductsOverviewScreen = ({
+  products,
+  navigation,
+  addToCart,
+  fetchProducts
+}) => {
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
-
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const loadProducts = useCallback(async () => {
     setError(null);
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
-      await dispatch(fetchProducts());
+      await fetchProducts();
     } catch (err) {
       setError(err.message);
     }
-    setIsLoading(false);
-  }, [dispatch, setIsLoading, setError]);
+    setIsRefreshing(false);
+  }, [fetchProducts, setIsLoading, setError]);
 
   useEffect(() => {
     const willFocusSub = navigation.addListener("willFocus", loadProducts);
-
     return () => {
       willFocusSub.remove();
     };
   }, [loadProducts]);
 
   useEffect(() => {
-    loadProducts();
-  }, [dispatch]);
+    setIsLoading(true);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
+  }, [loadProducts]);
 
   const selectItemHandler = (id, title) => {
     navigation.navigate("ProductDetail", {
@@ -83,6 +89,8 @@ const ProductsOverviewScreen = ({ products, navigation, addToCart }) => {
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       renderItem={itemData => (
         <ProductItem
@@ -147,4 +155,6 @@ const mapStateToProps = state => ({
   products: state.products.availableProducts
 });
 
-export default connect(mapStateToProps, { addToCart })(ProductsOverviewScreen);
+export default connect(mapStateToProps, { addToCart, fetchProducts })(
+  ProductsOverviewScreen
+);
