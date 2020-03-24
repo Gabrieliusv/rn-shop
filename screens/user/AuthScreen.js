@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from "react";
+import React, { useState, useReducer, useCallback } from "react";
 import {
   ScrollView,
   View,
@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { connect } from "react-redux";
-import { signup } from "../../store/actions/authActions";
+import { signup, login } from "../../store/actions/authActions";
 
 import Input from "../../components/UI/Input";
 import Card from "../../components/UI/Card";
@@ -39,7 +39,8 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const AuthScreen = ({ signup }) => {
+const AuthScreen = ({ signup, login }) => {
+  const [isSignup, setIsSignup] = useState(false);
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: "",
@@ -52,8 +53,12 @@ const AuthScreen = ({ signup }) => {
     formIsValid: false
   });
 
-  const handleSignup = () => {
-    signup(formState.inputValues.email, formState.inputValues.password);
+  const handleAuth = () => {
+    if (isSignup) {
+      signup(formState.inputValues.email, formState.inputValues.password);
+    } else {
+      login(formState.inputValues.email, formState.inputValues.password);
+    }
   };
 
   const handleInputChange = useCallback(
@@ -100,16 +105,18 @@ const AuthScreen = ({ signup }) => {
             />
             <View style={styles.buttonContainer}>
               <Button
-                title='Login'
+                title={isSignup ? "Sign Up" : "Login"}
                 color={Colors.primary}
-                onPress={handleSignup}
+                onPress={handleAuth}
               />
             </View>
             <View style={styles.buttonContainer}>
               <Button
-                title='Switch to Sing Up'
+                title={`Switch to ${isSignup ? "Login" : "Sign Up"}`}
                 color={Colors.secondary}
-                onPress={() => {}}
+                onPress={() => {
+                  setIsSignup(prevState => !prevState);
+                }}
               />
             </View>
           </ScrollView>
@@ -143,4 +150,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(null, { signup })(AuthScreen);
+export default connect(null, { signup, login })(AuthScreen);
