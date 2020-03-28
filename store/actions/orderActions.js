@@ -1,10 +1,11 @@
 import { ADD_ORDER, SET_ORDERS } from "./types";
 import Order from "../../models/order";
 
-export const fetchOrders = () => async dispatch => {
+export const fetchOrders = () => async (dispatch, getState) => {
+  const userId = getState().auth.userId;
   try {
     const response = await fetch(
-      "https://rn-shop-c1e9b.firebaseio.com/orders/u1.json"
+      `https://rn-shop-c1e9b.firebaseio.com/orders/${userId}.json`
     );
 
     if (!response.ok) {
@@ -34,10 +35,15 @@ export const fetchOrders = () => async dispatch => {
   }
 };
 
-export const addOrder = (cartItems, totalAmount) => async dispatch => {
+export const addOrder = (cartItems, totalAmount) => async (
+  dispatch,
+  getState
+) => {
+  const token = getState().auth.token;
+  const userId = getState().auth.userId;
   const date = new Date();
   const response = await fetch(
-    "https://rn-shop-c1e9b.firebaseio.com/orders/u1.json",
+    `https://rn-shop-c1e9b.firebaseio.com/orders/${userId}.json?auth=${token}`,
     {
       method: "POST",
       headers: {

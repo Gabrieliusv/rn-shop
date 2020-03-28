@@ -26,10 +26,10 @@ export const signup = (email, password) => async dispatch => {
     throw new Error(message);
   }
 
-  const resData = response.json();
+  const resData = await response.json();
   console.log(resData);
 
-  dispatch({ type: SIGNUP });
+  dispatch({ type: SIGNUP, token: resData.idToken, userId: resData.localId });
 };
 
 export const login = (email, password) => async dispatch => {
@@ -60,8 +60,8 @@ export const login = (email, password) => async dispatch => {
     throw new Error(message);
   }
 
-  const resData = response.json();
+  const resData = await response.json();
   console.log(resData);
 
-  dispatch({ type: LOGIN });
+  dispatch({ type: LOGIN, token: resData.idToken, userId: resData.localId });
 };
