@@ -4,7 +4,7 @@ import store from "./store/store";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 
-import ShopNavigator from "./navigation/ShopNavigator";
+import NavigationContainer from "./navigation/NavigationContainer";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -29,7 +29,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      <NavigationContainer />
     </Provider>
   );
 }
