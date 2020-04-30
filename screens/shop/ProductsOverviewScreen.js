@@ -6,7 +6,7 @@ import {
   Platform,
   ActivityIndicator,
   StyleSheet,
-  Text
+  Text,
 } from "react-native";
 import { connect } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -21,7 +21,7 @@ const ProductsOverviewScreen = ({
   products,
   navigation,
   addToCart,
-  fetchProducts
+  fetchProducts,
 }) => {
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -38,9 +38,9 @@ const ProductsOverviewScreen = ({
   }, [fetchProducts, setIsLoading, setError]);
 
   useEffect(() => {
-    const willFocusSub = navigation.addListener("willFocus", loadProducts);
+    const unsubscribe = navigation.addListener("focus", loadProducts);
     return () => {
-      willFocusSub.remove();
+      unsubscribe();
     };
   }, [loadProducts]);
 
@@ -54,7 +54,7 @@ const ProductsOverviewScreen = ({
   const selectItemHandler = (id, title) => {
     navigation.navigate("ProductDetail", {
       productId: id,
-      productTitle: title
+      productTitle: title,
     });
   };
 
@@ -92,7 +92,7 @@ const ProductsOverviewScreen = ({
       onRefresh={loadProducts}
       refreshing={isRefreshing}
       data={products}
-      renderItem={itemData => (
+      renderItem={(itemData) => (
         <ProductItem
           image={itemData.item.imageUrl}
           title={itemData.item.title}
@@ -120,10 +120,10 @@ const ProductsOverviewScreen = ({
 };
 
 const styles = StyleSheet.create({
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" }
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
 
-ProductsOverviewScreen.navigationOptions = navData => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: "All Products",
     headerLeft: () => (
@@ -147,12 +147,12 @@ ProductsOverviewScreen.navigationOptions = navData => {
           }}
         />
       </HeaderButtons>
-    )
+    ),
   };
 };
 
-const mapStateToProps = state => ({
-  products: state.products.availableProducts
+const mapStateToProps = (state) => ({
+  products: state.products.availableProducts,
 });
 
 export default connect(mapStateToProps, { addToCart, fetchProducts })(

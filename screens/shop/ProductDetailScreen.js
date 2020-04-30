@@ -5,16 +5,16 @@ import {
   Text,
   Image,
   Button,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 
 import { connect } from "react-redux";
 import Colors from "../../constants/colors";
 import { addToCart } from "../../store/actions/cartActions";
 
-const ProductDetailScreen = ({ navigation, products, addToCart }) => {
-  const productId = navigation.getParam("productId");
-  const product = products.find(prod => prod.id === productId);
+const ProductDetailScreen = ({ route, products, addToCart }) => {
+  const productId = route.params.productId;
+  const product = products.find((prod) => prod.id === productId);
 
   return (
     <ScrollView>
@@ -35,35 +35,35 @@ const ProductDetailScreen = ({ navigation, products, addToCart }) => {
 const styles = StyleSheet.create({
   image: {
     width: "100%",
-    height: 300
+    height: 300,
   },
   actions: {
     marginVertical: 20,
-    alignItems: "center"
+    alignItems: "center",
   },
   price: {
     fontFamily: "open-sans-bold",
     fontSize: 20,
     color: "#888",
     textAlign: "center",
-    marginVertical: 20
+    marginVertical: 20,
   },
   description: {
     fontFamily: "open-sans",
     fontSize: 14,
     textAlign: "center",
-    marginHorizontal: 20
-  }
+    marginHorizontal: 20,
+  },
 });
 
-ProductDetailScreen.navigationOptions = navData => {
+export const screenOptions = (navData) => {
   return {
-    headerTitle: navData.navigation.getParam("productTitle")
+    headerTitle: navData.route.params.productTitle,
   };
 };
 
-const mapStateToProps = state => ({
-  products: state.products.availableProducts
+const mapStateToProps = (state) => ({
+  products: state.products.availableProducts,
 });
 
 export default connect(mapStateToProps, { addToCart })(ProductDetailScreen);

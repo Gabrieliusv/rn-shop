@@ -5,7 +5,7 @@ import {
   FlatList,
   Platform,
   ActivityIndicator,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 import { connect } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -44,8 +44,8 @@ const OrdersScreen = ({ orders, fetchOrders }) => {
   return (
     <FlatList
       data={orders}
-      keyExtractor={item => item.id}
-      renderItem={itemData => (
+      keyExtractor={(item) => item.id}
+      renderItem={(itemData) => (
         <OrderItem
           amount={itemData.item.totalAmount}
           date={itemData.item.readableDate}
@@ -56,7 +56,7 @@ const OrdersScreen = ({ orders, fetchOrders }) => {
   );
 };
 
-OrdersScreen.navigationOptions = navData => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: "Your Orders",
     headerLeft: () => (
@@ -69,7 +69,7 @@ OrdersScreen.navigationOptions = navData => {
           }}
         />
       </HeaderButtons>
-    )
+    ),
   };
 };
 
@@ -77,12 +77,12 @@ const styles = StyleSheet.create({
   centered: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
 
-const mapStateToProps = state => ({
-  orders: state.orders.orders
+const mapStateToProps = (state) => ({
+  orders: state.orders.orders,
 });
 
 export default connect(mapStateToProps, { fetchOrders })(OrdersScreen);

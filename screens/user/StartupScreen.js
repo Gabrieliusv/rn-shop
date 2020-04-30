@@ -3,19 +3,20 @@ import {
   View,
   ActivityIndicator,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
 } from "react-native";
 import Colors from "../../constants/colors";
 import { connect } from "react-redux";
 
-import { authenticate } from "../../store/actions/authActions";
+import { authenticate, setDidTryAl } from "../../store/actions/authActions";
 
-const StartupScreen = ({ navigation, authenticate }) => {
+const StartupScreen = ({ authenticate, setDidTryAl }) => {
   useEffect(() => {
     const tryLogin = async () => {
       const userData = await AsyncStorage.getItem("userData");
       if (!userData) {
-        navigation.navigate("Auth");
+        // navigation.navigate("Auth");
+        setDidTryAl();
         return;
       }
       const transformedData = JSON.parse(userData);
@@ -23,13 +24,14 @@ const StartupScreen = ({ navigation, authenticate }) => {
       const expiration = new Date(expirationDate);
 
       if (expiration <= new Date() || !token || !userId) {
-        navigation.navigate("Auth");
+        // navigation.navigate("Auth");
+        setDidTryAl();
         return;
       }
 
-      const expirationTime = expirationDate.getTime() - new Date().getTime();
+      const expirationTime = expiration.getTime() - new Date().getTime();
 
-      navigation.navigate("Shop");
+      // navigation.navigate("Shop");
       authenticate(userId, token, expirationTime);
     };
     tryLogin();
@@ -46,8 +48,8 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
 
-export default connect(null, { authenticate })(StartupScreen);
+export default connect(null, { authenticate, setDidTryAl })(StartupScreen);

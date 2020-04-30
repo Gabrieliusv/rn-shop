@@ -1,26 +1,30 @@
 import { AsyncStorage } from "react-native";
-import { AUTHENTICATE, LOGOUT } from "./types";
+import { AUTHENTICATE, LOGOUT, SET_DID_TRY_AL } from "./types";
 
 let timer;
 
-export const authenticate = (userId, token, expirationTime) => dispatch => {
+export const setDidTryAl = () => {
+  return { type: SET_DID_TRY_AL };
+};
+
+export const authenticate = (userId, token, expirationTime) => (dispatch) => {
   dispatch(setLogoutTimer(expirationTime));
   dispatch({ type: AUTHENTICATE, userId: userId, token: token });
 };
 
-export const signup = (email, password) => async dispatch => {
+export const signup = (email, password) => async (dispatch) => {
   const response = await fetch(
     "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCFDv-NXFGZYolOY93gdBAM-N9RbOLDxAs",
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
         password: password,
-        returnSecureToken: true
-      })
+        returnSecureToken: true,
+      }),
     }
   );
 
@@ -51,19 +55,19 @@ export const signup = (email, password) => async dispatch => {
   saveDataToStorage(resData.idToken, resData.localId, expirationDate);
 };
 
-export const login = (email, password) => async dispatch => {
+export const login = (email, password) => async (dispatch) => {
   const response = await fetch(
     "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCFDv-NXFGZYolOY93gdBAM-N9RbOLDxAs",
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
         password: password,
-        returnSecureToken: true
-      })
+        returnSecureToken: true,
+      }),
     }
   );
 
@@ -107,7 +111,7 @@ const clearLogoutTimer = () => {
   }
 };
 
-const setLogoutTimer = expirationTime => dispatch => {
+const setLogoutTimer = (expirationTime) => (dispatch) => {
   timer = setTimeout(() => {
     dispatch(logout());
   }, expirationTime);
@@ -119,7 +123,7 @@ const saveDataToStorage = (token, userId, expirationDate) => {
     JSON.stringify({
       token: token,
       userId: userId,
-      expirationDate: expirationDate.toISOString()
+      expirationDate: expirationDate.toISOString(),
     })
   );
 };

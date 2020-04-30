@@ -5,7 +5,7 @@ import {
   FlatList,
   Button,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -24,7 +24,7 @@ const CartScreen = ({ cart, removeFromCart, addOrder }) => {
       productTitle: cart.items[key].productTitle,
       productPrice: cart.items[key].productPrice,
       quantity: cart.items[key].quantity,
-      sum: cart.items[key].sum
+      sum: cart.items[key].sum,
     });
   }
 
@@ -56,8 +56,8 @@ const CartScreen = ({ cart, removeFromCart, addOrder }) => {
       </Card>
       <FlatList
         data={cartItems}
-        keyExtractor={item => item.productId}
-        renderItem={itemData => (
+        keyExtractor={(item) => item.productId}
+        renderItem={(itemData) => (
           <CartItem
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
@@ -73,30 +73,30 @@ const CartScreen = ({ cart, removeFromCart, addOrder }) => {
 
 const styles = StyleSheet.create({
   screen: {
-    margin: 20
+    margin: 20,
   },
   summary: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 20,
-    padding: 10
+    padding: 10,
   },
   summaryText: {
     fontFamily: "open-sans-bold",
-    fontSize: 18
+    fontSize: 18,
   },
   amount: {
-    color: Colors.primary
-  }
+    color: Colors.primary,
+  },
 });
 
-CartScreen.navigationOptions = {
-  headerTitle: "Your Cart"
+export const screenOptions = {
+  headerTitle: "Your Cart",
 };
 
-const mapStateToProps = state => ({
-  cart: state.cart
+const mapStateToProps = (state) => ({
+  cart: state.cart,
 });
 
 export default connect(mapStateToProps, { removeFromCart, addOrder })(

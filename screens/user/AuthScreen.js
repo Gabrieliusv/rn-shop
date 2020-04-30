@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
-  Alert
+  Alert,
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { connect } from "react-redux";
@@ -22,11 +23,11 @@ const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
-      [action.input]: action.value
+      [action.input]: action.value,
     };
     const updatedValidities = {
       ...state.inputValidities,
-      [action.input]: action.isValid
+      [action.input]: action.isValid,
     };
     let updatedFormIsValid = true;
     for (const key in updatedValidities) {
@@ -35,7 +36,7 @@ const formReducer = (state, action) => {
     return {
       formIsValid: updatedFormIsValid,
       inputValidities: updatedValidities,
-      inputValues: updatedValues
+      inputValues: updatedValues,
     };
   }
   return state;
@@ -48,13 +49,13 @@ const AuthScreen = ({ signup, login, navigation }) => {
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: "",
-      password: ""
+      password: "",
     },
     inputValidities: {
       email: false,
-      password: false
+      password: false,
     },
-    formIsValid: false
+    formIsValid: false,
   });
 
   useEffect(() => {
@@ -78,7 +79,7 @@ const AuthScreen = ({ signup, login, navigation }) => {
           formState.inputValues.password
         );
       }
-      navigation.navigate("Shop");
+      // navigation.navigate("Shop");
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
@@ -91,7 +92,7 @@ const AuthScreen = ({ signup, login, navigation }) => {
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        input: inputIdentifier
+        input: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -99,8 +100,8 @@ const AuthScreen = ({ signup, login, navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior='padding'
-      keyboardVerticalOffset={50}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={10}
       style={styles.screen}
     >
       <LinearGradient colors={["#ffedff", "#ffe3ff"]} style={styles.gradient}>
@@ -143,7 +144,7 @@ const AuthScreen = ({ signup, login, navigation }) => {
                 title={`Switch to ${isSignup ? "Login" : "Sign Up"}`}
                 color={Colors.secondary}
                 onPress={() => {
-                  setIsSignup(prevState => !prevState);
+                  setIsSignup((prevState) => !prevState);
                 }}
               />
             </View>
@@ -154,28 +155,28 @@ const AuthScreen = ({ signup, login, navigation }) => {
   );
 };
 
-AuthScreen.navigationOptions = {
-  headerTitle: "Authenticate"
+export const screenOptions = {
+  headerTitle: "Authenticate",
 };
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   gradient: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   authContainer: {
     width: "80%",
     maxWidth: 400,
     maxHeight: 400,
-    padding: 20
+    padding: 20,
   },
   buttonContainer: {
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });
 
 export default connect(null, { signup, login })(AuthScreen);

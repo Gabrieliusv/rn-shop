@@ -6,7 +6,7 @@ import {
   Platform,
   Alert,
   KeyboardAvoidingView,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { connect } from "react-redux";
@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 import HeaderButton from "../../components/UI/HeaderButton";
 import {
   updateProduct,
-  createProduct
+  createProduct,
 } from "../../store/actions/productsActions";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/colors";
@@ -25,11 +25,11 @@ const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
-      [action.input]: action.value
+      [action.input]: action.value,
     };
     const updatedValidities = {
       ...state.inputValidities,
-      [action.input]: action.isValid
+      [action.input]: action.isValid,
     };
     let updatedFormIsValid = true;
     for (const key in updatedValidities) {
@@ -38,7 +38,7 @@ const formReducer = (state, action) => {
     return {
       formIsValid: updatedFormIsValid,
       inputValidities: updatedValidities,
-      inputValues: updatedValues
+      inputValues: updatedValues,
     };
   }
   return state;
@@ -48,27 +48,28 @@ const EditProductScreen = ({
   navigation,
   userProducts,
   createProduct,
-  updateProduct
+  updateProduct,
+  route,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const prodId = navigation.getParam("productId");
-  const editedProduct = userProducts.find(prod => prod.id === prodId);
+  const prodId = route.params ? route.params.productId : null;
+  const editedProduct = userProducts.find((prod) => prod.id === prodId);
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : "",
       imageUrl: editedProduct ? editedProduct.imageUrl : "",
       description: editedProduct ? editedProduct.description : "",
-      price: ""
+      price: "",
     },
     inputValidities: {
       title: editedProduct ? true : false,
       imageUrl: editedProduct ? true : false,
       description: editedProduct ? true : false,
-      price: editedProduct ? true : false
+      price: editedProduct ? true : false,
     },
-    formIsValid: editedProduct ? true : false
+    formIsValid: editedProduct ? true : false,
   });
 
   useEffect(() => {
@@ -81,8 +82,8 @@ const EditProductScreen = ({
     if (!formState.formIsValid) {
       Alert.alert("Wrong input!", "Please check the errors in the form.", [
         {
-          text: "Okay"
-        }
+          text: "Okay",
+        },
       ]);
       return;
     }
@@ -112,7 +113,19 @@ const EditProductScreen = ({
   }, [prodId, formState]);
 
   useEffect(() => {
-    navigation.setParams({ submit: handleSubmit });
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title='Save'
+            iconName={
+              Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
+            }
+            onPress={handleSubmit}
+          />
+        </HeaderButtons>
+      ),
+    });
   }, [handleSubmit]);
 
   const handleInputChange = useCallback(
@@ -121,7 +134,7 @@ const EditProductScreen = ({
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        input: inputIdentifier
+        input: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -200,39 +213,26 @@ const EditProductScreen = ({
   );
 };
 
-EditProductScreen.navigationOptions = navData => {
-  const submitFn = navData.navigation.getParam("submit");
+export const screenOptions = (navData) => {
+  const routeParams = navData.route.params ? navData.route.params : {};
   return {
-    headerTitle: navData.navigation.getParam("productId")
-      ? "Edt Product"
-      : "Add Product",
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title='Save'
-          iconName={
-            Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
-          }
-          onPress={submitFn}
-        />
-      </HeaderButtons>
-    )
+    headerTitle: routeParams.productId ? "Edt Product" : "Add Product",
   };
 };
 
 const styles = StyleSheet.create({
   form: {
-    margin: 20
+    margin: 20,
   },
   centered: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
 
-const mapStateToProps = state => ({
-  userProducts: state.products.userProducts
+const mapStateToProps = (state) => ({
+  userProducts: state.products.userProducts,
 });
 
 export default connect(mapStateToProps, { updateProduct, createProduct })(

@@ -9,18 +9,18 @@ import Colors from "../../constants/colors";
 import { deleteProduct } from "../../store/actions/productsActions";
 
 const UserProductsScreen = ({ userProducts, deleteProduct, navigation }) => {
-  const handleEditProduct = id => {
+  const handleEditProduct = (id) => {
     navigation.navigate("EditProduct", { productId: id });
   };
 
-  const handleDelete = id => {
+  const handleDelete = (id) => {
     Alert.alert("Are you sure?", "Do you really want to delete this item?", [
       { text: "No", style: "default" },
       {
         text: "Yes",
         style: "destructive",
-        onPress: () => deleteProduct(id)
-      }
+        onPress: () => deleteProduct(id),
+      },
     ]);
   };
 
@@ -35,7 +35,7 @@ const UserProductsScreen = ({ userProducts, deleteProduct, navigation }) => {
   return (
     <FlatList
       data={userProducts}
-      renderItem={itemData => (
+      renderItem={(itemData) => (
         <ProductItem
           image={itemData.item.imageUrl}
           title={itemData.item.title}
@@ -62,7 +62,7 @@ const UserProductsScreen = ({ userProducts, deleteProduct, navigation }) => {
   );
 };
 
-UserProductsScreen.navigationOptions = navData => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: "Your Products",
     headerLeft: () => (
@@ -86,12 +86,12 @@ UserProductsScreen.navigationOptions = navData => {
           }}
         />
       </HeaderButtons>
-    )
+    ),
   };
 };
 
-const mapStateToProps = state => ({
-  userProducts: state.products.userProducts
+const mapStateToProps = (state) => ({
+  userProducts: state.products.userProducts,
 });
 
 export default connect(mapStateToProps, { deleteProduct })(UserProductsScreen);
